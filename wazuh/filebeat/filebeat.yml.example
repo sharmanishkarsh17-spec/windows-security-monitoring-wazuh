@@ -1,0 +1,18 @@
+﻿# Sanitized Filebeat configuration example.
+#
+# Replace the placeholders with environment-specific values.
+# Do not commit credentials, keystores, certificates, or private keys.
+
+filebeat.modules:
+  - module: wazuh
+    alerts:
+      enabled: true
+    archives:
+      enabled: false
+
+output.elasticsearch:
+  hosts: ["https://OPENSEARCH_HOST:9200"]
+  username: "OPENSEARCH_USERNAME"
+  password: "OPENSEARCH_PASSWORD"
+
+setup.template.json.enabled: true

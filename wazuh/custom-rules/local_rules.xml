@@ -1,0 +1,10 @@
+﻿<group name="sysmon,">
+
+  <rule id="100011" level="10">
+    <if_group>sysmon,</if_group>
+    <field name="win.system.eventID">11</field>
+    <description>Sysmon Event 11 - File Creation Detected</description>
+    <group>sysmon_event11,file_creation,</group>
+  </rule>
+
+</group>

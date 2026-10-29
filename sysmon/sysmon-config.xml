@@ -1,0 +1,21 @@
+﻿<Sysmon schemaversion="4.90">
+  <EventFiltering>
+
+    <!--
+      Monitor process access to LSASS.
+      Used for credential-access / LSASS monitoring.
+    -->
+    <ProcessAccess onmatch="include">
+      <TargetImage condition="end with">lsass.exe</TargetImage>
+    </ProcessAccess>
+
+    <!--
+      Monitor file creation under the controlled
+      validation directory used during testing.
+    -->
+    <FileCreate onmatch="include">
+      <TargetFilename condition="begin with">C:\Temp\</TargetFilename>
+    </FileCreate>
+
+  </EventFiltering>
+</Sysmon>

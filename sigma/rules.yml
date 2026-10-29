@@ -1,0 +1,206 @@
+title: Windows Failed Logon
+name: windows_failed_logon
+id: 8f6a2d41-7c93-4e15-b8a2-51d7f6c90432
+status: test
+description: Detects failed Windows logon attempts.
+author: Nishkarsh
+date: 2026-08-07
+
+logsource:
+    product: windows
+    service: security
+
+detection:
+    selection:
+        EventID: 4625
+    filter:
+        TargetUserName:
+            - 'SYSTEM'
+            - 'LOCAL SERVICE'
+            - 'NETWORK SERVICE'
+            - 'GUEST'
+    condition: selection and not filter
+
+falsepositives:
+    - Users entering incorrect passwords
+    - Automated systems with incorrect credentials
+
+level: medium
+
+tags:
+    - attack.credential_access
+    - attack.t1110
+
+
+title: Repeated Failed Logons from Single Source
+name: repeated_failed_logons
+id: 4c8e1b72-6f35-4a90-bd21-93e7c5f81426
+status: experimental
+description: Detects more than five failed Windows logon events from the same source IP within five minutes.
+author: Nishkarsh
+date: 2026-08-07
+
+correlation:
+    type: event_count
+    rules:
+        - windows_failed_logon
+    group-by:
+        - IpAddress
+    timespan: 5m
+    condition:
+        gt: 5
+
+falsepositives:
+    - Users entering incorrect passwords multiple times
+    - Automated systems with incorrect credentials
+
+level: medium
+
+tags:
+    - attack.credential_access
+    - attack.t1110
+
+
+title: Suspicious Credential Dumping Tool Execution
+id: 2f8c7d1a-9b4e-4d3a-8c5f-1a2b3c4d5e6f
+status: experimental
+description: Detects process creation events containing command-line indicators associated with credential-dumping tools.
+author: Nishkarsh
+date: 2026-08-07
+
+logsource:
+    product: windows
+    service: security
+
+detection:
+    selection:
+        EventID: 4688
+        CommandLine:
+            - '*mimikatz*'
+            - '*sekurlsa*'
+            - '*logonpasswords*'
+            - '*procdump*'
+            - '*gsecdump*'
+    filter:
+        User:
+            - 'SYSTEM'
+            - 'LOCAL SERVICE'
+    condition: selection and not filter
+
+falsepositives:
+    - Security administrators performing authorized credential auditing
+    - Approved incident response activities
+
+level: high
+
+tags:
+    - attack.credential_access
+    - attack.t1110
+
+
+title: Unusual LSASS Memory Access
+id: 7c4f2b9d-3e8a-4f1c-9b2d-5a6e7f8c9d10
+status: experimental
+description: Detects processes attempting to access LSASS memory, which may indicate credential-access activity.
+author: Nishkarsh
+date: 2026-08-07
+
+logsource:
+    product: windows
+    service: sysmon
+
+detection:
+    selection:
+        EventID: 10
+        TargetImage: '*\lsass.exe'
+    filter:
+        SourceImage:
+            - '*\System'
+            - '*\csrss.exe'
+            - '*\svchost.exe'
+            - '*\rundll32.exe'
+    condition: selection and not filter
+
+falsepositives:
+    - Legitimate security software
+    - Endpoint Detection and Response (EDR) tools
+    - Authorized administrative or forensic activities
+
+level: high
+
+tags:
+    - attack.credential_access
+    - attack.t1003.001
+
+
+title: Browser and Vault Credential Store Access
+id: 9d7e4c2a-6b1f-4a8d-9c3e-2f5b7a1c8d4e
+status: experimental
+description: Detects file creation activity involving Windows Credential Manager stores and browser password databases, which may indicate credential-theft activity.
+author: Nishkarsh
+date: 2026-08-07
+
+logsource:
+    product: windows
+    service: sysmon
+
+detection:
+    selection:
+        EventID: 11
+        TargetFilename:
+            - '*\AppData\Local\Microsoft\Credentials*'
+            - '*\AppData\Roaming\Microsoft\Credentials*'
+            - '*\AppData\Local\Google\Chrome\User Data\Default\Login Data*'
+    filter:
+        Image:
+            - '*\chrome.exe'
+            - '*\msedge.exe'
+            - '*\explorer.exe'
+            - '*\svchost.exe'
+    condition: selection and not filter
+
+falsepositives:
+    - Legitimate browser activity
+    - Windows credential management operations
+    - Authorized forensic or security investigations
+
+level: high
+
+tags:
+    - attack.credential_access
+    - attack.t1555
+
+
+title: Admin Privileges Assigned to Non-System User
+id: c8a4f2d7-5b9e-4a1f-8d3c-7e6f9b2a1c4d
+status: experimental
+description: Detects Windows special-privilege logon events for non-system user accounts, which may indicate privileged activity.
+author: Nishkarsh
+date: 2026-08-07
+
+logsource:
+    product: windows
+    service: security
+
+detection:
+    selection:
+        EventID: 4672
+        TargetUserName: '*'
+    filter:
+        TargetUserName:
+            - 'SYSTEM'
+            - 'LOCAL SERVICE'
+            - 'NETWORK SERVICE'
+            - '*$'
+    condition: selection and not filter
+
+falsepositives:
+    - Legitimate administrator logons
+    - Approved administrative activities
+    - Scheduled system tasks
+
+level: high
+
+tags:
+    - attack.privilege_escalation
+    - attack.t1548

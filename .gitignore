@@ -1,0 +1,52 @@
+# Python virtual environment
+.sigma-venv/
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Secrets and credentials
+*.key
+*.pem
+*.pfx
+*.p12
+*.crt
+*.cer
+.env
+.env.*
+*.secret
+secrets/
+credentials/
+
+# Wazuh / Filebeat sensitive files
+wazuh/filebeat/filebeat.keystore
+wazuh/filebeat/certs/
+wazuh/filebeat/*.key
+wazuh/filebeat/*.crt
+
+# Logs and runtime data
+*.log
+logs/
+alerts.json
+alerts.log
+
+# OpenSearch / Wazuh data
+opensearch-data/
+wazuh-data/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+~*
+
+# Personal/local evidence
+evidence/raw/

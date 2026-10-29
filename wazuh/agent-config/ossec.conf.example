@@ -1,0 +1,31 @@
+﻿<!--
+  Sanitized example Wazuh Windows agent configuration.
+
+  Replace placeholder values with environment-specific settings.
+  Do not commit real credentials or private environment details.
+-->
+
+<ossec_config>
+
+  <!-- Wazuh Manager connection -->
+  <client>
+    <server>
+      <address>WAZUH_MANAGER_IP</address>
+      <port>1514</port>
+      <protocol>tcp</protocol>
+    </server>
+  </client>
+
+  <!-- Windows Security Event Log -->
+  <localfile>
+    <location>Security</location>
+    <log_format>eventchannel</log_format>
+  </localfile>
+
+  <!-- Sysmon Operational Event Log -->
+  <localfile>
+    <location>Microsoft-Windows-Sysmon/Operational</location>
+    <log_format>eventchannel</log_format>
+  </localfile>
+
+</ossec_config>
