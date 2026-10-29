@@ -24,6 +24,30 @@ Windows Endpoint → Wazuh Agent → Wazuh Manager → Filebeat → OpenSearch �
 
 ## Detection Coverage
 
+## Validation Evidence
+
+The detection rules were validated using controlled Windows telemetry and investigated through Wazuh/OpenSearch.
+
+### Rule 1 — Windows Failed Logon
+
+![Rule 1 - Failed Logon](screenshots/rule-1-failed-logon.png)
+
+### Rule 2 — Process Creation
+
+![Rule 2 - Process Creation](screenshots/rule-2-process-creation.png)
+
+### Rule 3 — LSASS Access
+
+![Rule 3 - LSASS Access](screenshots/rule-3-lsass-access.png)
+
+### Rule 4 — File Creation
+
+![Rule 4 - File Creation](screenshots/rule-4-file-creation.png)
+
+### Rule 5 — Special Privileges
+
+![Rule 5 - Special Privileges](screenshots/rule-5-special-privileges.png)
+
 | Detection | Event | Purpose | MITRE ATT&CK |
 |---|---:|---|---|
 | Windows Failed Logon | 4625 | Detect failed authentication attempts | T1110 |
